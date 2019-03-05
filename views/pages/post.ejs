@@ -1,0 +1,13 @@
+<% include ../templates/header %>
+<section>
+  <div class="container">
+    <h1><%= title %></h1>
+    <% let date = {day: "numeric", month: "numeric", year: "numeric"}; %>
+    <small>Created: <%= created.toLocaleDateString("en-US", date); %></small>
+    <p>
+      <%= body %>
+    </p>
+  </div>
+</section>
+
+<% include ../templates/footer %>
