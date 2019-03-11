@@ -28,6 +28,33 @@ app.use(express.static(__dirname + "/public/"));
 const view = __dirname + "/views/pages";
 
 
+//------------------------- RESTful APIs -----------------------------------
+app.route("/apis")
+  .get(function(req, res){
+    // find one by provided id
+    Post.find({}, function (err, posts) {
+      if (err) {
+        res.send(err);
+      } else {
+        res.send(posts);
+      }
+    });
+  });
+
+app.route("/api/post/:id")
+  .get(function(req, res){
+    // find one by provided id
+    Post.findById(req.params.id, function(err, post){
+      if (err) {
+        res.send(err);
+      } else {
+        if(_.lowerCase(req.params.id) === _.lowerCase(post.id)){
+          res.send(post);
+        }
+      }
+    });
+  });
+
 //------------------ Pages ----------------------------------
 app.get("/", function(req, res){
   // Read all from database
@@ -36,6 +63,17 @@ app.get("/", function(req, res){
       console.log(err);
     } else {
       res.render(view + "/home", { posts: posts});
+    }
+  });
+});
+
+app.get("/api", function(req, res){
+  // Read all from database
+  Post.find({}, function (err, posts) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.render(view + "/api", { posts: posts});
     }
   });
 });
@@ -80,6 +118,7 @@ app.post("/compose", function(req, res){
   });
 });
 
+//---------------------- Server -----------------------------
 app.listen(process.env.PORT || 3000, function() {
   console.log("Server started on port 3000");
 });
